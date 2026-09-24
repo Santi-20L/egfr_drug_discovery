@@ -1,15 +1,13 @@
 # ML-Based Virtual Screening for EGFR Inhibitor Discovery
 
 A machine learning pipeline for prioritizing small-molecule candidates against
-**EGFR (Epidermal Growth Factor Receptor)**, a well-characterized oncology
+**EGFR (Epidermal Growth Factor Receptor)**, an oncology
 target with multiple approved inhibitors (e.g. Gefitinib, Erlotinib).
 
-The goal of this project is **not** to discover a new drug. It is to build
+My goal in this project is **not** to discover a new drug. It is to build
 and validate a computational pipeline that can prioritize candidate compounds
 against a biological target, using established cheminformatics and machine
-learning methods — the kind of workflow used in early-stage computational
-drug discovery to narrow down large compound libraries before expensive
-experimental validation.
+learning methods.
 
 ---
 

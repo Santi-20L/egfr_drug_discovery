@@ -14,8 +14,7 @@ learning methods.
 ## Status
 
 🚧 **In progress** — this repository is being built incrementally. See the
-Pipeline Overview below for the full planned scope; sections marked
-`(planned)` are not yet implemented.
+Pipeline Overview below for the full planned scope.
 
 ---
 
@@ -73,6 +72,7 @@ pip install rdkit pandas numpy scikit-learn xgboost matplotlib seaborn
 
 **Santi Isgrò**
 BSc in Computer Science — Università degli Studi di Catania
+
 MSc in Bioinformatics — in progress
 
 ---

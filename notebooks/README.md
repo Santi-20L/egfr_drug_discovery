@@ -6,4 +6,3 @@ Planned notebooks:
 - `03_ml_screening.ipynb` — Random Forest/XGBoost training and virtual screening
 - `04_docking.ipynb` — Molecular docking validation of top candidates
 
-Not yet created — see repository status in the main README.

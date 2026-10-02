@@ -1,0 +1,9 @@
+**Q: Why did you evaluate on a scaffold split in addition to a random split, and why are the AUCs different?**
+
+A: In a random split, structurally similar molecules from the same
+chemical series end up in both the training and test sets, so the model
+is partly rewarded for recognizing near-duplicates. A scaffold split
+places entire chemical families in one set only, which mimics the real
+use case of screening new compounds. The AUC drop from 0.945 to 0.890
+(Random Forest) quantifies this optimism. Both results are reported,
+and the scaffold split is treated as the primary estimate.

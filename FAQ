@@ -1,3 +1,104 @@
+## Technical FAQs
+
+**Q: Why an IC50 threshold of 1000 nM to define "active"?**
+
+A: IC50 < 1000 nM (pIC50 > 6) is a widely used cutoff for "active" in
+kinase and general QSAR benchmarks, and it falls close to the median of
+this dataset (pIC50 = 6.74), which keeps the classes reasonably balanced
+(64.5% active). The cutoff is a convention, not a biological boundary:
+molecules near 1000 nM are effectively a coin flip in terms of labels.
+
+**Q: What does "inactive" mean here?**
+
+A: Inactive means a measured IC50 of 1000 nM or higher against EGFR, not
+"does not bind". These are molecules that were synthesized and tested,
+so they are often analogs from optimization series. A real screening
+library contains mostly untested molecules that look very different, so
+this dataset is not representative of a typical screening library.
+
+**Q: How did you handle multiple measurements for the same molecule?**
+
+A: IC50 values from different assays can differ by orders of magnitude
+(for example 41, 300 and 7,820 nM for the same compound). I used the
+median per molecule, which is robust to single outlier assays, and
+removed values below 0.01 nM or above 1,000,000 nM as implausible.
+Assay-level differences (cell-based vs enzymatic, wild-type vs mutant
+EGFR) were not modelled, and the target ID CHEMBL203 can include
+measurements on mutant forms. This is a known limitation.
+
+**Q: Why Morgan fingerprints with radius 2 and 2048 bits?**
+
+A: Morgan fingerprints (ECFP-like) are a standard, strong baseline for
+activity prediction. Radius 2 captures substructures up to 2 bonds
+around each atom, and 2048 bits is a common size that balances
+information and dimensionality. I did not tune these values, so other
+settings (for example radius 3, counts instead of bits) could perform
+differently.
+
+**Q: Are there any information losses in a 2048-bit fingerprint?**
+
+A: Yes. Different substructures can hash to the same bit (collisions),
+and the fingerprint ignores 3D shape and stereochemistry details. This
+is acceptable for a baseline, and it is one reason a final docking step
+is planned: it adds structural information the fingerprint lacks.
+
+**Q: Did you standardize the molecules before computing features?**
+
+A: SMILES were used as provided by ChEMBL (all 13,518 parsed without
+errors in RDKit). I did not apply extra standardization such as salt
+stripping, neutralization or tautomer canonicalization, so a small
+fraction of molecules may be represented in non-parent forms. Adding a
+standardization step is listed as an improvement.
+
+**Q: Why these six descriptors?**
+
+A: They are the Lipinski-related properties (molecular weight, LogP,
+H-bond donors and acceptors, TPSA, rotatable bonds), chosen because
+they are interpretable and relevant to drug-likeness. Active compounds
+showed modestly higher molecular weight, LogP, acceptor count and
+rotatable bonds, but no single descriptor separates the classes.
+
+
+**Q: Why Random Forest and XGBoost?**
+
+A: Both are strong, well-established baselines on fingerprint data and
+require little tuning. They also allow a clear comparison between
+bagging and boosting. Graph neural networks are a reasonable next step
+at this dataset size (about 13.5k molecules), and were left as future
+work to keep the scope manageable. Fingerprint plus tree-model baselines
+are often hard to beat on datasets of this size.
+
+**Q: Did you tune hyperparameters?**
+
+A: No. Both models use reasonable fixed settings (500 trees, XGBoost
+max_depth 6 and learning rate 0.1) and class weighting. Tuning with
+cross-validation inside the training set would likely give small gains.
+The test set was used only for final evaluation.
+
+**Q: Is Random Forest really better than XGBoost?**
+
+A: Random Forest scored higher on both splits (0.945 vs 0.938 random,
+0.890 vs 0.868 scaffold), but this comes from a single split and a
+single random seed, without confidence intervals. The result is
+suggestive, not conclusive. Repeating with several seeds and scaffold
+folds would be needed to claim a real difference.
+
+**Q: Why ROC-AUC, and does 0.89 mean the model would find new EGFR inhibitors?**
+
+A: ROC-AUC is threshold-independent and handles the moderate class
+imbalance. It measures how well the model separates measured actives
+from measured inactives within this dataset. It does not directly
+measure screening performance on a library of untested molecules, which
+is why the next notebook reports enrichment on a decoy library instead.
+
+**Q: Why did you drop the descriptors if they slightly improved AUC?**
+
+A: Adding descriptors to fingerprints changed scaffold-split AUC from
+0.890 to 0.892, a difference within expected variation. Descriptors
+alone reached 0.744. I kept fingerprints only for simplicity. This
+choice was made after looking at test-set results, but with a 0.002
+difference the risk of selection bias is negligible.
+
 **Q: Why did you evaluate on a scaffold split in addition to a random split, and why are the AUCs different?**
 
 A: In a random split, structurally similar molecules from the same

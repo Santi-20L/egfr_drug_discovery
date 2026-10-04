@@ -12,18 +12,20 @@ A: An IC50 of 1000 nM or higher, either measured exactly or established by a bou
 These are molecules that were synthesized and tested, often analogs from optimization series, not "does not bind". 
 A real screening library contains mostly untested molecules that look different, so this dataset is not representative of a typical screening library.
 
-**Q: How did you handle censored measurements such as "IC50 > 1000 nM"?**
-
-A: They are used only when the bound already settles the label ("IC50 > x" with x >= 1000 nM is inactive, "IC50 < x" with x <= 1000 nM is active). 
-Other censored records are dropped. Treating them as exact values would corrupt the labels, and dropping all of them would remove many clearly inactive compounds 
-(an exact-only version of the dataset was 73.2% active, against 66.7% in the final version).
-
 **Q: How did you handle multiple measurements and duplicate structures?**
 
-A: Structures were standardized and merged by the connectivity block of the InChIKey, so salts, charge states and stereoisomers collapse into one row
-(13,302 ChEMBL IDs became 12,888 structures). Each structure is labelled by the majority of its records, and 463 exact ties were dropped.
-Values for the same compound can differ by orders of magnitude across assays (for example 41, 300 and 7,820 nM). 
+A: Structures were standardized and merged by the connectivity block of the InChIKey, so salts, charge states and stereoisomers collapse into one row 
+(13,301 ChEMBL IDs became 12,887 structures). Each structure is labelled by the majority of its records, and 463 exact ties were dropped. 
+Values for the same compound can differ by orders of magnitude across assays (for example 41, 300 and 7,820 nM).
 Assay type and EGFR mutant status are not modelled, and the target ID CHEMBL203 can include measurements on mutant forms. This is a known limitation.
+
+**Q: Did you standardize the molecules before computing features?**
+
+A: Yes. Structures were cleaned with RDKit (functional-group normalization), reduced to the parent fragment (removing salts and solvents) and neutralized. 
+Entries without any carbon atom (one bare zinc ion) were removed, while very small organic molecules such as catechol were kept.
+In total 20 records failed standardization or were non-organic and were dropped. 
+Not applied: tautomer canonicalization, protonation at a given pH, and stereochemistry-aware deduplication 
+(stereochemistry is ignored, consistent with the Morgan fingerprints used here).
 
 **Q: How did you handle multiple measurements for the same molecule?**
 

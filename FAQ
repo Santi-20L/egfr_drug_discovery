@@ -96,26 +96,32 @@ folds would be needed to claim a real difference.
 
 **Q: Why ROC-AUC, and does 0.89 mean the model would find new EGFR inhibitors?**
 
-A: ROC-AUC is threshold-independent and handles the moderate class
-imbalance. It measures how well the model separates measured actives
-from measured inactives within this dataset. It does not directly
-measure screening performance on a library of untested molecules, which
-is why the next notebook reports enrichment on a decoy library instead.
+A: ROC-AUC is threshold-independent and, together with PR-AUC, handles the 2:1 class imbalance. 
+It measures how well the model separates measured actives from measured inactives within this dataset. 
+It does not measure screening performance on a library of untested molecules, which is why the next notebook reports enrichment on a decoy library.
 
 **Q: Why did you drop the descriptors if they slightly improved AUC?**
 
-A: Adding descriptors to fingerprints changed scaffold-split AUC from
-0.890 to 0.892, a difference within expected variation. Descriptors
-alone reached 0.744. I kept fingerprints only for simplicity. This
-choice was made after looking at test-set results, but with a 0.002
-difference the risk of selection bias is negligible.
+A: Adding descriptors to fingerprints changed scaffold-split ROC-AUC from 0.893 to 0.895, a difference within expected variation.
+Descriptors alone reached 0.764. I kept fingerprints only for simplicity.
+The choice was made after seeing test-set results, but with a 0.002 difference the risk of selection bias is negligible.
 
 **Q: Why did you evaluate on a scaffold split in addition to a random split, and why are the AUCs different?**
 
-A: In a random split, structurally similar molecules from the same
-chemical series end up in both the training and test sets, so the model
-is partly rewarded for recognizing near-duplicates. A scaffold split
-places entire chemical families in one set only, which mimics the real
-use case of screening new compounds. The AUC drop from 0.945 to 0.890
-(Random Forest) quantifies this optimism. Both results are reported,
-and the scaffold split is treated as the primary estimate.
+A: In a random split, structurally similar molecules from the same chemical series end up in both the training and test sets, 
+so the model is partly rewarded for recognizing near-duplicates. A scaffold split places entire scaffold groups in one set only, 
+which is closer to screening new compounds. ROC-AUC drops from 0.943 to 0.893 for Random Forest. 
+Both results are reported and the scaffold split is treated as the primary estimate.
+
+**Q: Is the scaffold split strict enough?**
+
+A: Only moderately. Murcko scaffolds ignore side chains, so test molecules can still be close analogs of training molecules:
+the median nearest-neighbour Tanimoto similarity is 0.73 on the scaffold split (0.82 on the random split).
+A stricter evaluation would cluster molecules by fingerprint similarity or split by publication date.
+This was not done, and the scaffold-split AUC should be read as optimistic.
+
+**Q: How much do the models add over a simple similarity baseline?**
+
+A: A Tanimoto nearest-neighbour rule with no training reaches ROC-AUC 0.874 on the scaffold split (0.920 on the random split),
+against 0.893 and 0.943 for Random Forest. The models add about 0.02 ROC-AUC, so most of the signal is similarity to known EGFR compounds. 
+This is expected for a target with many well-explored chemical series.

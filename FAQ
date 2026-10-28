@@ -122,6 +122,12 @@ This was not done, and the scaffold-split AUC should be read as optimistic.
 
 **Q: How much do the models add over a simple similarity baseline?**
 
-A: A Tanimoto nearest-neighbour rule with no training reaches ROC-AUC 0.874 on the scaffold split (0.920 on the random split),
-against 0.893 and 0.943 for Random Forest. The models add about 0.02 ROC-AUC, so most of the signal is similarity to known EGFR compounds. 
-This is expected for a target with many well-explored chemical series.
+A: In ROC-AUC the gain is small: 0.893 vs 0.874 on the scaffold split (Random Forest vs Tanimoto nearest neighbour), 
+so most of the overall separation comes from similarity to known EGFR compounds. At the top of the ranking, which matters for screening, 
+the gain is larger: on a library with 5% actives, EF at 1% is 16.5 against 6.7 and PR-AUC is 0.51 against 0.32. 
+The early-enrichment estimate rests on 11 molecules per library, one model seed and one split, so it is suggestive and not conclusive.
+
+**Q: Why report enrichment and not only AUC?**
+
+A: ROC-AUC measures the ranking of all molecules, while a screen only follows up the top of the list. Enrichment factor and precision at 1% and 5% measure 
+that top directly, and PR-AUC reflects how many false positives appear among the top hits.

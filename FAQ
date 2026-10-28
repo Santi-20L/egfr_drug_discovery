@@ -131,3 +131,9 @@ The early-enrichment estimate rests on 11 molecules per library, one model seed 
 
 A: ROC-AUC measures the ranking of all molecules, while a screen only follows up the top of the list. Enrichment factor and precision at 1% and 5% measure 
 that top directly, and PR-AUC reflects how many false positives appear among the top hits.
+
+**Q: Did you check the model against known EGFR drugs?**
+
+A: Yes. Gefitinib, erlotinib, lapatinib and osimertinib were removed from the training set and scored after retraining. 
+All four rank above 97% of the measured inactives. Because close analogs of these drugs remain in the training set (maximum Tanimoto similarity 0.87 to 0.92), 
+this is a sanity check on known chemotypes and not evidence that the model finds novel inhibitors.

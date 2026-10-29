@@ -1,0 +1,13 @@
+Metric,Model,Mean,5th pct,95th pct
+EF 1%,Random Forest,16.45,12.837,20.173
+EF 1%,Tanimoto 1-NN,6.73,3.668,9.17
+EF 5%,Random Forest,9.234,7.612,10.677
+EF 5%,Tanimoto 1-NN,8.275,7.213,9.535
+PR-AUC,Random Forest,0.505,0.404,0.596
+PR-AUC,Tanimoto 1-NN,0.315,0.248,0.37
+Precision 1%,Random Forest,0.815,0.636,1.0
+Precision 1%,Tanimoto 1-NN,0.334,0.182,0.455
+Precision 5%,Random Forest,0.458,0.377,0.529
+Precision 5%,Tanimoto 1-NN,0.41,0.358,0.473
+ROC-AUC,Random Forest,0.895,0.857,0.931
+ROC-AUC,Tanimoto 1-NN,0.875,0.833,0.912
